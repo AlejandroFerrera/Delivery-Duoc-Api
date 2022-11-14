@@ -78,7 +78,11 @@ class OrderDetail(models.Model):
 class HistoricPayments(models.Model):
 
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
-    total = models.IntegerField()
-    commission = models.ForeignKey(Commission, on_delete=models.CASCADE)
     nro_boleta = models.IntegerField()
-    created = models.DateTimeField(auto_now_add=True)
+    products_total = models.IntegerField()
+    commission_price = models.IntegerField()
+    shipping_price = models.IntegerField()
+    total = models.IntegerField()
+    year = models.IntegerField()
+    month = models.IntegerField()
+    day = models.IntegerField()

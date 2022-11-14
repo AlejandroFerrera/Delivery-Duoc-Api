@@ -54,12 +54,12 @@ def get_product(request, id):
 
 @api_view(['GET', 'POST'])
 def create_order(request):
-
+    
     new_order = Order(client=User.objects.last(), status='pagada',
                       commission=Commission.objects.last(), shipping_cost=ShippingCost.objects.last())
-    new_order.save()
 
     details = JSONParser().parse(request)
+    new_order.save()
 
     for detail in details:
         product = Product.objects.get(id=detail['id'])
@@ -69,5 +69,7 @@ def create_order(request):
             order=new_order, product=product, quantity=product_quantity)
         
         new_order_detail.save()
-
+    
+    new_order.save()
+    
     return Response("Orden confirmada")
