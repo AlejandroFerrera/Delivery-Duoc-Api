@@ -5,6 +5,7 @@ from django.http import HttpResponse, JsonResponse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.parsers import JSONParser
+import random
 
 
 @api_view(['GET'])
@@ -54,9 +55,12 @@ def get_product(request, id):
 
 @api_view(['GET', 'POST'])
 def create_order(request):
-    
+
+    # Random Shipping Cost
+    random_shipping_id = random.randint(1, ShippingCost.objects.count())
+
     new_order = Order(client=User.objects.last(), status='pagada',
-                      commission=Commission.objects.last(), shipping_cost=ShippingCost.objects.last())
+                      commission=Commission.objects.last(), shipping_cost=ShippingCost.objects.get(id=random_shipping_id))
 
     details = JSONParser().parse(request)
     new_order.save()
@@ -67,9 +71,9 @@ def create_order(request):
 
         new_order_detail = OrderDetail(
             order=new_order, product=product, quantity=product_quantity)
-        
+
         new_order_detail.save()
-    
+
     new_order.save()
-    
+
     return Response("Orden confirmada")
