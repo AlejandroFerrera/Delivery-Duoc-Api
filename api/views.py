@@ -17,6 +17,13 @@ def end_points(request):
 
     return Response(end_points)
 
+@api_view(['GET'])
+def get_random_shipping_price(request):
+    if request.method == 'GET':
+        random_id = random.randint(1, ShippingCost.objects.count())
+        price = ShippingCost.objects.get(id=random_id).cost
+        return Response({random_id: price})
+
 
 @api_view(['GET'])
 def get_restaurants(request):
