@@ -22,7 +22,7 @@ def get_random_shipping_price(request):
     if request.method == 'GET':
         random_id = random.randint(1, ShippingCost.objects.count())
         price = ShippingCost.objects.get(id=random_id).cost
-        return Response({random_id: price})
+        return Response({'id': random_id, 'price': price})
 
 
 @api_view(['GET'])
