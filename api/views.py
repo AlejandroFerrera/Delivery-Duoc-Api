@@ -5,6 +5,8 @@ from django.http import HttpResponse, JsonResponse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.parsers import JSONParser
+from django.contrib.auth.hashers import check_password
+from rest_framework.authtoken.models import Token
 import random
 
 
@@ -16,6 +18,7 @@ def end_points(request):
     }
 
     return Response(end_points)
+
 
 @api_view(['GET'])
 def get_random_shipping_price(request):
@@ -84,3 +87,24 @@ def create_order(request):
     new_order.save()
 
     return Response("Orden confirmada")
+
+
+@api_view(['POST'])
+def login(request):
+    data = JSONParser().parse(request)
+
+    username = data['username']
+    password = data['password']
+
+    try:
+        user = User.objects.get(username=username)
+    except:
+        return Response('Usuario invalido')
+
+    pass_valido = check_password(password, user.password)
+
+    if not pass_valido:
+        return Response("Password incorrecta")
+
+    token, created = Token.objects.get_or_create(user=user)
+    return Response({"id": user.id, "token": token.key})
