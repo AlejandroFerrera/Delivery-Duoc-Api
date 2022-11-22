@@ -93,11 +93,11 @@ def create_order(request):
 def login(request):
     data = JSONParser().parse(request)
 
-    username = data['username']
+    username = data['email']
     password = data['password']
 
     try:
-        user = User.objects.get(username=username)
+        user = User.objects.get(email=username)
     except:
         return Response('Usuario invalido')
 
@@ -108,3 +108,21 @@ def login(request):
 
     token, created = Token.objects.get_or_create(user=user)
     return Response({"id": user.id, "token": token.key})
+
+@api_view(['POST'])
+def create_user(request):
+
+    data = JSONParser().parse(request)
+
+    username = data['email']
+    password = data['password']
+
+    new_user = User.objects.create()
+
+    new_user.email = username
+    new_user.username = username
+    new_user.set_password(password)
+
+    new_user.save()
+
+    return Response(new_user)
